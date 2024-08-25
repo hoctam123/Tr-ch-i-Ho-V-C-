@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò chơi Câu đố Hóa Vô Cơ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center font-sans">
+    <div class="container mx-auto p-4 max-w-md">
+        <h1 class="text-3xl font-bold text-center mb-6 text-blue-600">Câu đố Nguyên tố Hóa học</h1>
+        <div id="game-container" class="bg-white rounded-lg shadow-md p-6">
+            <div id="question" class="text-xl mb-4 text-center"></div>
+            <div id="options" class="grid grid-cols-2 gap-4 mb-4"></div>
+            <div id="result" class="text-center mb-4 font-bold"></div>
+            <div class="flex justify-between items-center">
+                <div id="score" class="text-lg font-semibold">Điểm: 0</div>
+                <button id="next-btn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300">Câu tiếp theo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "Ký hiệu hóa học của Natri là gì?", a: "Na", options: ["Na", "Nt", "N", "Ni"] },
+            { q: "Nguyên tố nào có số nguyên tử 6?", a: "Carbon", options: ["Oxygen", "Carbon", "Nitrogen", "Boron"] },
+            { q: "Ký hiệu hóa học của Sắt là gì?", a: "Fe", options: ["Fe", "Ir", "F", "Si"] },
+            { q: "Nguyên tố nào là khí trơ?", a: "Helium", options: ["Hydrogen", "Helium", "Nitrogen", "Oxygen"] },
+            { q: "Ký hiệu hóa học của Vàng là gì?", a: "Au", options: ["Ag", "Au", "Cu", "Pt"] },
+            { q: "Nguyên tố nào là kim loại kiềm?", a: "Potassium", options: ["Calcium", "Magnesium", "Potassium", "Aluminum"] },
+            { q: "Ký hiệu hóa học của Bạc là gì?", a: "Ag", options: ["Ag", "Au", "Hg", "Pb"] },
+            { q: "Nguyên tố nào là phi kim?", a: "Chlorine", options: ["Sodium", "Copper", "Chlorine", "Zinc"] },
+            { q: "Ký hiệu hóa học của Nhôm là gì?", a: "Al", options: ["Al", "Ag", "Au", "An"] },
+            { q: "Nguyên tố nào có số nguyên tử 1?", a: "Hydrogen", options: ["Helium", "Lithium", "Hydrogen", "Carbon"] }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        const questionEl = document.getElementById('question');
+        const optionsEl = document.getElementById('options');
+        const resultEl = document.getElementById('result');
+        const scoreEl = document.getElementById('score');
+        const nextBtn = document.getElementById('next-btn');
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            questionEl.textContent = question.q;
+            optionsEl.innerHTML = '';
+            question.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.className = 'bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 transition duration-300';
+                button.onclick = () => checkAnswer(option);
+                optionsEl.appendChild(button);
+            });
+            resultEl.textContent = '';
+            nextBtn.style.display = 'none';
+        }
+
+        function checkAnswer(answer) {
+            const correct = questions[currentQuestion].a;
+            if (answer === correct) {
+                resultEl.textContent = 'Đúng!';
+                resultEl.className = 'text-center mb-4 font-bold text-green-600';
+                score++;
+            } else {
+                resultEl.textContent = `Sai. Đáp án đúng là ${correct}.`;
+                resultEl.className = 'text-center mb-4 font-bold text-red-600';
+            }
+            scoreEl.textContent = `Điểm: ${score}`;
+            nextBtn.style.display = 'block';
+            Array.from(optionsEl.children).forEach(button => button.disabled = true);
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                questionEl.textContent = 'Trò chơi kết thúc!';
+                optionsEl.innerHTML = '';
+                resultEl.textContent = `Bạn đã đạt ${score} điểm trên tổng số ${questions.length} câu hỏi.`;
+                nextBtn.style.display = 'none';
+            }
+        };
+
+        loadQuestion();
+    </script>
+</body>
+</html>
